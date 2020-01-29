@@ -7,10 +7,12 @@ class FoodSerializer(sz.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ['id', 'name', 'meal', 'description', 'available']
+        fields = ['name', 'meal', 'description', 'available']
 
 
 class MenuSerializer(sz.ModelSerializer):
+    food_items = FoodSerializer(many=True)
+
     class Meta:
         model = Menu
         fields = ['type', 'day', 'meal', 'food_items']
