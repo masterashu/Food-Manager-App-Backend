@@ -60,6 +60,11 @@ class Menu(models.Model):
     )
     food_items = models.ManyToManyField(Food)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['type', 'day'], name='unique_meal')
+        ]
+
 
 class MealOptedOut(models.Model):
     TYPE = (
