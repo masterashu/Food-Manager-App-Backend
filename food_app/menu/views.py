@@ -1,5 +1,7 @@
 from rest_framework.views import APIView, Response
 from rest_framework.status import *
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAuthenticatedOrGet
 from rest_framework.parsers import JSONParser
 from .models import *
 from .serializers import *
@@ -14,13 +16,16 @@ class MenuGetView(APIView):
 
 
 class MealOptOutView(APIView):
+    permission_classes = [IsAuthenticatedOrGet, ]
+
     def get(self, request):
         meals = MealOptedOut.objects.filter(date__gte=date.today())
         meals_serialized = MealOptedOutSerializer(meals, many=True)
         return Response(meals_serialized.data, status=HTTP_200_OK)
 
     def post(self, request):
-        return
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=HTTP_201_CREATED)
 
 
 class TodayMealOptOutView(APIView):
@@ -31,6 +36,8 @@ class TodayMealOptOutView(APIView):
 
 
 class FeedbackGivenView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
     def get(self, request):
         feedback = Feedback.objects.all()
         feedback_serialized = FeedbackSerializer(feedback, many=True)
@@ -49,11 +56,4 @@ class MonthlyFeedbackGivenView(APIView):
         feedback = Feedback.objects.filter(date__month=month)
         feedback_serialized = FeedbackSerializer(feedback, many=True)
         return Response(feedback_serialized.data, status=HTTP_200_OK)
-
-    def post(self, request):
-        serializer = FeedbackSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
