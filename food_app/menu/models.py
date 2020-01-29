@@ -1,6 +1,7 @@
 from django.db import models
 from registration.models import User
 
+
 class Food(models.Model):
     DAY = (
         ("1", "Monday"),
@@ -27,7 +28,7 @@ class Food(models.Model):
     name = models.CharField(max_length=50)
     meal = models.CharField(max_length=10, choices=MEAL, default="V")
     description = models.CharField(max_length=200)
-    availability = models.CharField(bool, default=True)
+    availability = models.BooleanField(default=True)
 
 
 class Menu(models.Model):
@@ -47,11 +48,6 @@ class Menu(models.Model):
         ("D", "Dinner"),
     )
 
-    MEAL = (
-        ("V", "Veg"),
-        ("NV", "Non-Veg"),
-    )
-
     type = models.CharField(
         max_length=10,
         choices=TYPE,
@@ -61,11 +57,6 @@ class Menu(models.Model):
         max_length=10,
         choices=DAY,
         default=1
-    )
-    meal = models.CharField(
-        max_length=10,
-        choices=MEAL,
-        default="V",
     )
     food_items = models.ManyToManyField(Food)
 
@@ -82,7 +73,8 @@ class MealOptedOut(models.Model):
         choices=TYPE,
         default="B",
     )
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='opted_out_meals')
 
 
 class Feedback(models.Model):
@@ -91,7 +83,9 @@ class Feedback(models.Model):
         ("L", "Lunch"),
         ("D", "Dinner"),
     )
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='feedback')
     description = models.CharField(max_length=500)
     date = models.DateField()
-    food = models.ForeignKey(Food)
+    food = models.ForeignKey(
+        Food, on_delete=models.CASCADE, related_name='feedback')
