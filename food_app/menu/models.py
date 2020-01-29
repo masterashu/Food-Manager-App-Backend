@@ -3,22 +3,6 @@ from registration.models import User
 
 
 class Food(models.Model):
-    DAY = (
-        ("1", "Monday"),
-        ("2", "Tuesday"),
-        ("3", "Wednesday"),
-        ("4", "Thursday"),
-        ("5", "Friday"),
-        ("6", "Saturday"),
-        ("7", "Sunday"),
-    )
-
-    TYPE = (
-        ("B", "Breakfast"),
-        ("L", "Lunch"),
-        ("D", "Dinner"),
-    )
-
     MEAL = (
         ("V", "Veg"),
         ("NV", "Non-Veg"),
