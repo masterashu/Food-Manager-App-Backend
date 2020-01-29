@@ -3,9 +3,10 @@ from rest_framework.status import *
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAuthenticatedOrGet
 from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser
 from .models import *
 from .serializers import *
-from datetime import date
+from datetime import date, datetime, timedelta
 
 
 class MenuGetView(APIView):
@@ -17,6 +18,7 @@ class MenuGetView(APIView):
 
 class MealOptOutView(APIView):
     permission_classes = [IsAuthenticatedOrGet, ]
+    parser_classes = (JSONParser,)
 
     def get(self, request):
         meals = MealOptedOut.objects.filter(date__gte=date.today())
@@ -24,8 +26,20 @@ class MealOptOutView(APIView):
         return Response(meals_serialized.data, status=HTTP_200_OK)
 
     def post(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        d = request.data.get("date")
+        t = request.data.get("type")
+        d = datetime.strptime(d, "%d-%m-%Y")
+        if d - datetime.now() > timedelta(days=1):
+            if MealOptedOut.objects.filter(date=d.date(), user=request.user, type=t).count() == 0:
+                m = MealOptedOut()
+                m.date = d.date()
+                m.user = request.user
+                m.type = t
+                m.save()
+                data = MealOptedOutSerializer(m)
+                return Response(data.data, status=HTTP_201_CREATED)
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
 
 class TodayMealOptOutView(APIView):
@@ -56,4 +70,3 @@ class MonthlyFeedbackGivenView(APIView):
         feedback = Feedback.objects.filter(date__month=month)
         feedback_serialized = FeedbackSerializer(feedback, many=True)
         return Response(feedback_serialized.data, status=HTTP_200_OK)
-
