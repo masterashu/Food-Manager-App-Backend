@@ -28,3 +28,4 @@ class FeedbackSerializer(sz.ModelSerializer):
     class Meta:
         model = Feedback
         fields = ['user', 'description', 'date', 'food']
+
