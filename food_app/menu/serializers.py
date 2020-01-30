@@ -13,11 +13,10 @@ class FoodSerializer(sz.ModelSerializer):
 
 class MenuSerializer(sz.ModelSerializer):
     food_items = FoodSerializer(many=True)
-    type = sz.CharField(source='get_type_display')
 
     class Meta:
         model = Menu
-        fields = ['type', 'day', 'meal', 'food_items']
+        fields = ['type', 'day', 'food_items']
 
 
 class MealOptedOutSerializer(sz.ModelSerializer):
@@ -31,7 +30,8 @@ class MealOptedOutSerializer(sz.ModelSerializer):
 
 class FeedbackSerializer(sz.ModelSerializer):
     user = UserSerializer()
-
+    food = FoodSerializer()
+    
     class Meta:
         model = Feedback
         fields = ['user', 'description', 'date', 'food']
