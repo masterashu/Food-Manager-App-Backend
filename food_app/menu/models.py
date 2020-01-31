@@ -14,6 +14,9 @@ class Food(models.Model):
     description = models.CharField(max_length=200)
     availability = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name + " " + self.get_meal_display()
+
 
 class Menu(models.Model):
     DAY = (
@@ -49,6 +52,8 @@ class Menu(models.Model):
             models.UniqueConstraint(fields=['type', 'day'], name='unique_meal')
         ]
 
+    def __str__(self):
+        return self.get_day_display() + " " + self.get_type_display()
 
 class MealOptedOut(models.Model):
     TYPE = (
@@ -94,3 +99,6 @@ class Extras(models.Model):
     name = models.CharField(max_length=50)
     meal = models.CharField(max_length=10, choices=MEAL, default="V")
     description = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name + " " + self.get_meal_display()t
