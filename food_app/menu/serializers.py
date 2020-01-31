@@ -31,8 +31,22 @@ class MealOptedOutSerializer(sz.ModelSerializer):
 class FeedbackSerializer(sz.ModelSerializer):
     user = UserSerializer()
     food = FoodSerializer()
-    
+
     class Meta:
         model = Feedback
         fields = ['user', 'description', 'date', 'food']
 
+
+class ExtrasSerializer(sz.ModelSerializer):
+    class Meta:
+        model = Extras
+        fields = ['name', 'meal', 'description', 'price']
+
+
+class ExtrasOrderSerializer(sz.ModelSerializer):
+    user = UserSerializer()
+    extra_food = ExtrasSerializer()
+
+    class Meta:
+        model = ExtrasOrder
+        fields = ['extra_food', 'user', 'date']
