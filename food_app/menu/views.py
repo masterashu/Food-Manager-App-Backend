@@ -70,3 +70,17 @@ class MonthlyFeedbackGivenView(APIView):
         feedback = Feedback.objects.filter(date__month=month)
         feedback_serialized = FeedbackSerializer(feedback, many=True)
         return Response(feedback_serialized.data, status=HTTP_200_OK)
+
+
+class ExtraOrderView(APIView):
+    def get(self, request):
+        extra_food = ExtrasOrder.objects.all()
+        extra_food_serialized = ExtrasOrderSerializer(extra_food, many=True)
+        return Response(extra_food_serialized, status=HTTP_200_OK)
+
+    def post(self, request):
+        serializer = ExtrasOrderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_200_OK)

@@ -86,19 +86,20 @@ class Feedback(models.Model):
 
 
 class Extras(models.Model):
-    TYPE = (
-        ("B", "Breakfast"),
-        ("L", "Lunch"),
-        ("D", "Dinner"),
-    )
     MEAL = (
         ("V", "Veg"),
         ("NV", "Non-Veg"),
     )
-    id = models.CharField(max_length=10, primary_key=True, auto_created=True)
     name = models.CharField(max_length=50)
     meal = models.CharField(max_length=10, choices=MEAL, default="V")
     description = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name + " " + self.get_meal_display()t
+    price = models.IntegerField(default=0)
+
+
+class ExtrasOrder(models.Model):
+    extra_food = models.ForeignKey(Extras, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_extra_food")
+    date = models.DateField()
