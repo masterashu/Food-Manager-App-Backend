@@ -15,22 +15,6 @@ class Food(models.Model):
     availability = models.BooleanField(default=True)
 
 
-class Extras(models.Model):
-    TYPE = (
-        ("B", "Breakfast"),
-        ("L", "Lunch"),
-        ("D", "Dinner"),
-    )
-    MEAL = (
-        ("V", "Veg"),
-        ("NV", "Non-Veg"),
-    )
-    id = models.CharField(max_length=10, primary_key=True, auto_created=True)
-    name = models.CharField(max_length=50)
-    meal = models.CharField(max_length=10, choices=MEAL, default="V")
-    description = models.CharField(max_length=200)
-
-
 class Menu(models.Model):
     DAY = (
         ("0", "Sunday"),
@@ -94,3 +78,19 @@ class Feedback(models.Model):
     date = models.DateField()
     food = models.ForeignKey(
         Food, on_delete=models.CASCADE, related_name='feedback')
+
+
+class Extras(models.Model):
+    TYPE = (
+        ("B", "Breakfast"),
+        ("L", "Lunch"),
+        ("D", "Dinner"),
+    )
+    MEAL = (
+        ("V", "Veg"),
+        ("NV", "Non-Veg"),
+    )
+    id = models.CharField(max_length=10, primary_key=True, auto_created=True)
+    name = models.CharField(max_length=50)
+    meal = models.CharField(max_length=10, choices=MEAL, default="V")
+    description = models.CharField(max_length=200)
